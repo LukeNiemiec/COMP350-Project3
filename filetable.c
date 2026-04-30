@@ -22,6 +22,16 @@ typedef struct Block {
 
 
 /*
+
+MACROS:
+
+	NAME				VALUE
+	
+	BLOCKDATA_SIZE		52
+	FILENAME_SIZE		32
+	MAX_BLOCKS			90
+
+
 TABLE OF FUNCTIONS:
 
 	RETURNS			NAME																DESCRIPTION
