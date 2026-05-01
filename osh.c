@@ -74,11 +74,59 @@ void format(Block** filetable, int* freemap) {
 	. use strcpy() to add data to block->filedata:					strcpy(block)
 
 */
-void write_file(char* fileame, char* filedata, Block** filetable, int* freemap) {}
+// Sets aside a free block and associates a filename
+void create(char* filename, Block** filetable, int* freemap) {
+    if (filename == NULL) {
+        printf("Error: No filename provided.\n");
+        return;
+    }
+    if (add_file(filename, "", filetable, freemap)) {
+        int address = get_address(filename, filetable, freemap);
+        printf("File '%s' created successfully at block '%i'\n", filename, address);
+    } else {
+        printf("[-] Error: Could not create file '%s'. It may already exist or disk is full.\n", filename);
+    }
+}
 
-void create(char* filename, Block** filetable, int* freemap) {}
+// reads a file of any inputed name should it exist in the filetable
+void read_file(char* filename, Block** filetable, int* freemap) {
+    if (filename == NULL) {
+        printf("[-] Error: No filename provided.\n");
+        return;
+    }
+    int address = get_address(filename, filetable, freemap);
+    if (address != -1) { // checks if there is an index of a given filename, if there is there is a file to read
+        printf("--- Content of %s ---\n", filename);
+        printf("%s\n", filetable[address]->filedata);
+    } else {
+        printf("[-] Error: File '%s' not found.\n", filename);
+    }
+}
 
-void read_file(char* filename, Block** filetable, int* freemap) {}
+// writes data to a given filename should it exist
+void write_file(char* filename, Block** filetable, int* freemap) {    
+    if (filename == NULL) {
+        printf("Error: No filename provided.\n");
+        return;
+    }
+    
+    //this change was made to keep the final product in line with the example posted on blackboard.
+    printf("Enter content to write (max '%i' bytes): ",BLOCKDATA_SIZE);
+    char filedata[BLOCKDATA_SIZE];
+    fgets(filedata, BLOCKDATA_SIZE, stdin); //Changes the data to input from being a parameter to another input after you do the "write 'filename'" command
+
+    int address = get_address(filename, filetable, freemap);
+    if (address != -1) {
+        if (filedata != NULL) {
+            strncpy(filetable[address]->filedata, filedata, BLOCKDATA_SIZE - 1);
+            filetable[address]->filedata[BLOCKDATA_SIZE - 1] = '\0'; 
+        } else {
+            printf("Error: No data provided to write.\n");
+        }
+    } else {
+        printf("Error: File '%s' not found.\n", filename);
+    }
+}
 
 void delete_file(char* filename, Block** filetable, int* freemap) {}
 
@@ -173,7 +221,7 @@ void main(int argc, char* argv[]) {
 			
 		
 		    // Assuming args[2] holds the string of data to write
-		    write_file(args[1], args[2], filetable, freemap); 
+		    write_file(args[1], filetable, freemap); // changed to fit the lessened parameters in write_file -Adam
 		    
 		} else if (strcmp(args[0], "delete\n") == 0) {//Sets a block free and removes it from the table 
 		    delete_file(args[1], filetable, freemap);
