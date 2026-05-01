@@ -84,14 +84,14 @@ void create(char* filename, Block** filetable, int* freemap) {
         int address = get_address(filename, filetable, freemap);
         printf("File '%s' created successfully at block '%i'\n", filename, address);
     } else {
-        printf("[-] Error: Could not create file '%s'. It may already exist or disk is full.\n", filename);
+        printf("Error: Could not create file '%s'. It may already exist or disk is full.\n", filename);
     }
 }
 
 // reads a file of any inputed name should it exist in the filetable
 void read_file(char* filename, Block** filetable, int* freemap) {
     if (filename == NULL) {
-        printf("[-] Error: No filename provided.\n");
+        printf("Error: No filename provided.\n");
         return;
     }
     int address = get_address(filename, filetable, freemap);
@@ -99,7 +99,7 @@ void read_file(char* filename, Block** filetable, int* freemap) {
         printf("--- Content of %s ---\n", filename);
         printf("%s\n", filetable[address]->filedata);
     } else {
-        printf("[-] Error: File '%s' not found.\n", filename);
+        printf("Error: File '%s' not found.\n", filename);
     }
 }
 
