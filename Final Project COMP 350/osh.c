@@ -81,6 +81,7 @@ void create(char* filename, Block** filetable, int* freemap) {
         return;
     }
 
+
     if (add_file(filename, "", filetable, freemap)) {
         int address = get_address(filename, filetable, freemap);
         printf("File '%s' created successfully at block '%i'\n", filename, address);
@@ -172,8 +173,10 @@ int get_input(char* out) {
 	fflush(stdin);
 	printf("\n> ");
 	fgets(out, size, stdin);
+	out[strcspn(out, "\n")] = '\0';  // add this line
 	return size;
 }
+
 
 void main(int argc, char* argv[]) {
 
@@ -233,16 +236,16 @@ void main(int argc, char* argv[]) {
 
 		
 		//Requested file system command interceptor- Bertin Simeon 4/30/26 3:48 PM
-		if (strcmp(args[0], "format\n") == 0) {//Function intializes disk and clears freemap and filetable
+		if (strcmp(args[0], "format") == 0) {//Function intializes disk and clears freemap and filetable
 		    format(filetable, freemap);
 		    
-		} else if (strcmp(args[0], "create\n") == 0) {//Sets aside a free block and associates a filename to refer to affermentioned free block
+		} else if (strcmp(args[0], "create") == 0) {//Sets aside a free block and associates a filename to refer to affermentioned free block
 		    create(args[1], filetable, freemap);
 		    
-		} else if (strcmp(args[0], "read\n") == 0) {//Finds requested block and displays content within block
+		} else if (strcmp(args[0], "read") == 0) {//Finds requested block and displays content within block
 		    read_file(args[1], filetable, freemap);
 		    
-		} else if (strcmp(args[0], "write\n") == 0) {//Changes contents of the content within the requested block
+		} else if (strcmp(args[0], "write") == 0) {//Changes contents of the content within the requested block
 		
 			/*TODO:
 				. check the output for prompting for filedata after we confirmed that 
@@ -254,12 +257,17 @@ void main(int argc, char* argv[]) {
 		    // Assuming args[2] holds the string of data to write
 		    write_file(args[1], filetable, freemap); // changed to fit the lessened parameters in write_file -Adam
 		    
-		} else if (strcmp(args[0], "delete\n") == 0) {//Sets a block free and removes it from the table 
+		} else if (strcmp(args[0], "delete") == 0) {//Sets a block free and removes it from the table
 		    delete_file(args[1], filetable, freemap);
 		    
-		} else if (strcmp(args[0], "ls\n") == 0) {// Acts as the lister of all existing files
+		} else if (strcmp(args[0], "ls") == 0) {// Acts as the lister of all existing files
 		    ls(filetable, freemap);
+
+		} else if (strcmp(args[0], "exit") == 0) {
+			printf("Exiting file system simulator.\n");
+			exit(0);
+		}
 		    
 		}
 	}	
-}
+
